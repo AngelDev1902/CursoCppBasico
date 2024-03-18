@@ -15,8 +15,8 @@ using namespace std;
     O, R, R, E, P.
 
     Su funcionamiento es mediante el uso de nodos, donde cada nodo contiene una variable que almacena el dato en esa
-    posición y un puntero de tipo Nodo que apunta a la dirección de memoria del nodo siguiente (el que está por encima del actual), de manera
-    que el ultimo nodo (El que esta hasta arriba de la pila) apuntara a nulo
+    posición y un puntero de tipo Nodo que apunta a la dirección de memoria del nodo siguiente, de manera
+    que el primer nodo que ingresamos siempre apuntara a nulo
 */
 
 // Estructura del nodo de la pila
@@ -37,8 +37,43 @@ void popAll(Nodo *&ultimo);
 int main() {
     Nodo *ultimo = nullptr; // Inicialmente la pila está vacía, por lo que el puntero al último nodo apunta a nulo
 
-    // Insertar un elemento en la pila
-    push(ultimo, 15);
+    // Insertar elementos en la pila
+    push(ultimo, 10);
+    push(ultimo, 20);
+    push(ultimo, 30);
+
+    // Mostrar la pila antes de eliminar el último elemento
+    cout << "Pila antes de pop:" << endl;
+    Nodo *temp = ultimo;
+    while (temp != nullptr) {
+        cout << temp->dato << " ";
+        temp = temp->siguiente;
+    }
+    cout << endl;
+
+    // Eliminar el último elemento de la pila
+    pop(ultimo);
+
+    // Mostrar la pila después de eliminar el último elemento
+    cout << "Pila después de pop:" << endl;
+    temp = ultimo;
+    while (temp != nullptr) {
+        cout << temp->dato << " ";
+        temp = temp->siguiente;
+    }
+    cout << endl;
+
+    // Eliminar todos los elementos de la pila
+    popAll(ultimo);
+
+    // Mostrar la pila después de eliminar todos los elementos
+    cout << "Pila después de popAll:" << endl;
+    temp = ultimo;
+    while (temp != nullptr) {
+        cout << temp->dato << " ";
+        temp = temp->siguiente;
+    }
+    cout << endl;
 
     return 0;
 }
@@ -51,25 +86,10 @@ void push(Nodo *&ultimo, int valor) {
 
     // Llenando las variables de la estructura del nuevo nodo
     nuevoNodo->dato = valor; // Asignamos el valor pasado como parámetro al nuevo nodo
-    nuevoNodo->siguiente = nullptr; // Como este será el último nodo de la pila, el puntero al siguiente nodo es nulo
+    nuevoNodo->siguiente = ultimo; // cada puntero apuntara al nodo actual que despues pasara a ser el penultimo
 
-    // Si la pila está vacía, el nuevo nodo se convierte en el último nodo de la pila
-    if (ultimo == nullptr) {
-        ultimo = nuevoNodo;
-    } else {
-        // Si la pila ya contiene elementos, buscamos el último nodo y agregamos el nuevo nodo al final
-        Nodo *actual = ultimo;
-
-        // Avanzamos al último nodo
-        while (actual->siguiente != nullptr) {
-            actual = actual->siguiente;
-        }
-
-        // Asignamos el nuevo nodo como el siguiente del último nodo
-        // de esta manera, el nodo actual que teniamos deja de apuntar a nullo y apunta ahora al nuevo nodo, el cual ahora
-        // de posiciona hasta arriba de la pila
-        actual->siguiente = nuevoNodo;
-    }
+    // igualamos el el ultimo nodo al nuevo, por lo que pasara a estar en la cima
+    ultimo = nuevoNodo;
 }
 
 void pop(Nodo *&ultimo) {
@@ -77,24 +97,16 @@ void pop(Nodo *&ultimo) {
     if (ultimo == nullptr) {
         cout << "La pila está vacía, no se puede eliminar ningún elemento." << endl;
         return;
-    }
+    } else {
 
-    // Si la pila contiene solo un elemento, eliminamos ese elemento
-    if (ultimo->siguiente == nullptr) {
-        delete ultimo;
-        ultimo = nullptr;
-        return;
-    }
+        // nos apoyamos de un nodo auxiliar que guarda el una copia del ultimo nodo
+        Nodo *actual = ultimo;
+        // asignamos como ultimo nodo al nodo al que apuntaba el nodo que eliminamos
+        ultimo = actual->siguiente;
+        // eliminamos nuestro auxiliar
+        delete actual;
 
-    // Buscamos el penúltimo nodo de la pila
-    Nodo *actual = ultimo;
-    while (actual->siguiente->siguiente != nullptr) {
-        actual = actual->siguiente;
     }
-
-    // Eliminamos el último nodo de la pila y actualizamos el puntero al tope
-    delete actual->siguiente;
-    actual->siguiente = nullptr;
 }
 
 // Función para eliminar todos los elementos de la pila
