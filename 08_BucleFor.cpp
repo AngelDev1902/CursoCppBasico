@@ -27,5 +27,10 @@ int main() {
         }
     }
 
+    // es valido en un mismo bucle tener mas de una variable y una condicion, permitiendo trabajar con ambas al mismo tiempo
+    for (size_t i = 0, j = 10; i < 10 && j > 0; i++, j--) {
+	std::cout << "i: " << i << " j: " << j << std::endl;
+    }
+
     return 0;
 }
